@@ -1,0 +1,58 @@
+<?php if ($this->pageCount) : ?>
+    <nav class="transparent z-depth-0">
+        <div class="nav-wrapper">
+        <ul class="pagination">
+            <!-- Previous page link -->
+            <?php if (isset($this->previous)) : ?>
+                <li>
+                    <a href="<?php echo $this->url($this->route, array('page' => $this->previous)); ?>" aria-label="Prev.">
+                       <i class="tiny material-icons">chevron_left</i>
+                        <!-- <span aria-hidden="true">&laquo;</span>-->
+                    </a>
+                </li>
+            <?php else: ?>
+                <li class="disabled">
+                    <a href="#" aria-label="Previous">
+                        <i class="tiny material-icons">chevron_left</i>
+                        <!-- <span aria-hidden="true">&laquo;</span>-->
+                    </a>
+                </li>
+            <?php endif; ?>
+
+            <!-- Numbered page links -->
+            <?php foreach ($this->pagesInRange as $page) : ?>
+                <?php if ($page != $this->current) : ?>
+                    <li>
+                        <a href="<?php echo $this->url($this->route, array('page' => $page)); ?>">
+                            <?php echo $page; ?>
+                        </a>
+                    </li>
+                <?php else: ?>
+                    <li class="active pink">
+                        <a href="#">
+                            <?php echo $page; ?>
+                        </a>
+                    </li>
+                <?php endif; ?>
+            <?php endforeach; ?>
+
+            <!-- Next page link -->
+            <?php if (isset($this->next)) : ?>
+                <li>
+                    <a href="<?php echo $this->url($this->route, array('page' => $this->next)); ?>" aria-label="Sig.">
+                        <!--<span aria-hidden="true">&raquo;</span>-->
+                        <i class="tiny material-icons">chevron_right</i>
+                    </a>
+                </li>
+            <?php else: ?>
+                <li class="disabled">
+                    <a href="#" aria-label="Next">
+                        <!-- <span aria-hidden="true">&raquo;</span> -->
+                        <i class="tiny material-icons">chevron_right</i>
+                    </a>
+                </li>
+            <?php endif; ?>
+        </ul>
+        </div>
+    </nav>
+<?php endif; ?>

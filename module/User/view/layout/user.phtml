@@ -1,0 +1,244 @@
+<?php echo $this->doctype(); ?>
+                <?php if (defined('RUNNING_FROM_ROOT')) {
+$this->plugin('basePath')->setBasePath($this->basePath().'/public');
+} ?>
+
+<html lang="ES">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle('Code needs girls')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>   
+        
+        <link rel="canonical"
+  href="https://dev.twitter.com/web/tweet-button">
+        
+        
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/logo.png'))
+                ->prependStylesheet($this->basePath('css/index.css'))        
+                ->prependStylesheet($this->basePath('css/materialize.min.css')) 
+                        //->prependStylesheet($this->basePath('css/index.css')) 
+                        ->prependStylesheet(array('href'=>'https://fonts.googleapis.com/icon?family=Material+Icons', 'rel'=>'stylesheet') )
+                
+                ?>
+        
+        
+                <!-- Include Font Awesome. -->
+  <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+  <!-- Include Editor style. -->
+  <link href="<?php echo $this->basePath('froala_editor/css/froala_editor.min.css');?>" rel="stylesheet" type="text/css" />
+  <link href="<?php echo $this->basePath('froala_editor/css/froala_style.min.css');?>" rel="stylesheet" type="text/css" />
+
+  <!-- Include Code Mirror style -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.css">
+  
+  <!-- Include Editor Plugins style. -->
+   <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/video.css');?>">
+   <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/char_counter.css');?>">
+     <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/code_beautifier.css');?>">
+  <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/code_view.css');?>">
+  <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/colors.css');?>">
+  <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/emoticons.css');?>">
+  <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/fullscreen.css');?>">
+  <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/image.css');?>">
+  <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/image_manager.css');?>">
+  <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/line_breaker.css');?>">
+  <link rel="stylesheet" href="<?php echo $this->basePath('froala_editor/css/plugins/table.css');?>">
+
+                       
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()
+            ->prependFile($this->basePath('js/materialize.min.js'))
+            ->prependFile($this->basePath('js/jquery.js'))    
+            ->prependFile($this->basePath('js/jquery.min.js'))
+            ->prependFile($this->basePath('js/ckeditor/ckeditor.js'))
+            
+        ; ?>
+        
+        
+        
+     
+        
+        <script>
+            $(document).ready(function(){
+                  $('.button-collapse').sideNav({
+                  menuWidth: 200, // Default is 240
+                  edge: 'right', // Choose the horizontal origin
+                  closeOnClick: false // Closes side-nav on <a> clicks, useful for Angular/Meteor
+                }
+              );
+            })
+        </script>
+        
+        <script>
+        $(document).ready(function(){
+    $('ul.tabs').tabs();
+  });
+        </script>
+        
+        
+        <script>
+             
+  $(document).ready(function(){
+    $('.collapsible').collapsible({
+      accordion : false // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+  });
+
+
+        
+        </script>
+        
+        
+
+    </head>
+
+    <?php $user = $this->identity();?>
+   
+    <body >
+        
+        <nav class="nav-mobile white z-depth-0">
+                        <div class="col s12 m3">    
+                    <a class="brand-logo" style="padding-top:0.1em; padding-bottom:0.1em; padding-left:0.8em;" href="<?php echo $this->url('home') ?>"> <img class="responsive-img" width="76" src="<?php echo $this->basePath() . '/img/logo_cng.png' ?>"> </a>
+                        </div>  
+                        <div>
+                    <a href="#" class="button-collapse right" data-activates="mobile-demo"><i class="material-icons teal-text" style="padding-right:0.1em;">menu</i></a>
+                            
+                            <ul class="right hide-on-med-and-down"> 
+                                <li>
+                                    <a  href="<?php echo $this->url('home') ?>">
+                                        <span class="teal-text">Inicio</span>   
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="teal-text" href="<?php echo $this->url('home') ?>">
+                                        Quiénes somos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="teal-text" href="<?php echo $this->url('courses') ?>">
+                                        Cursos
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="teal-text" href="<?php echo $this->url('blog') ?>">
+                                        Blog
+                                    </a>
+                                </li>
+                                <?php if ($user != null) : ?>
+                                    <li>  
+                                        <div class="chip white">
+                                            
+                                            <!--<a  href="<?php echo $this->url('profile', array('nickname' => $user->nickname)); ?>">
+                                           -->
+                                        <a  class="dropdown-button teal-text" data-activates="dropdown01" href="#!" >
+                                            <img onerror="this.src='<?php echo $this->basePath('img/profile/profile-pic.jpeg')?>';" src="<?php echo $this->basePath('img/profile/'.$user->nickname.'.png')?>">  
+                                                <span class="teal-text"><?php echo ($user->first_name); ?></span>
+                                        </a>
+                                        <ul id="dropdown01" class="dropdown-content">
+                                            <li>
+                                                <a href="<?php echo $this->url('profile', array('nickname' => $user->nickname)); ?>">Perfil</a>
+                                                <a href="<?php echo $this->url('logout') ?>">Opciones</a>
+                                                <a href="<?php echo $this->url('logout') ?>">Salir</a>
+                                                
+                                            </li>
+                                        </div>
+                                    </li>
+                 
+                                    <?php else : ?>
+                                    <li><a class="teal-text" href="<?php echo $this->url('login') ?>"><?php echo $this->translate('Iniciar sesión') ?></a></li>
+                                    <li><a class="teal-text" href="<?php echo $this->url('sign-up') ?>"><?php echo $this->translate('Únete ahora') ?></a></li>
+                                    <!-- <?php echo $this->translate('You are not logged in'); ?> -->
+                                <?php endif; ?>
+   
+                            </ul>
+                            <ul class="right side-nav" id="mobile-demo"> 
+                                <li><a class="teal-text" href="<?php echo $this->url('home') ?>">Inicio</a></li>
+                                <li><a class="teal-text" href="<?php echo $this->url('home') ?>">Quiénes somos</a></li>
+                                <li><a class="teal-text" href="<?php echo $this->url('courses') ?>">Cursos</a></li>
+                                <li><a class="teal-text" href="<?php echo $this->url('blog') ?>">Blog</a></li>
+                                <?php if ($user != null) : ?>
+                                <li>
+                                    
+                                            <a  class="dropdown-button teal-text" data-activates="dropdown02" href="#!" >
+                                                <?php echo ($user->first_name); ?>
+                                        </a>
+                                    </li>
+                                     
+                                        <ul id="dropdown02" class="dropdown-content">
+                                            <li>
+                                               <a href="<?php echo $this->url('profile', array('nickname' => $user->nickname)); ?>">Perfil</a>
+                                                <a href="<?php echo $this->url('logout') ?>">Opciones</a>
+                                                <a href="<?php echo $this->url('logout') ?>">Salir</a>
+                                            </li>
+                                            
+                                        </ul>
+                                   
+                                <?php else : ?>
+                                   <li><a class="teal-text" href="<?php echo $this->url('login') ?>"><?php echo $this->translate('Iniciar sesión') ?></a></li>
+                                   <li><a class="teal-text" href="<?php echo $this->url('sign-up') ?>"><?php echo $this->translate('Únete ahora') ?></a></li>
+                                    <!-- <?php echo $this->translate('You are not logged in'); ?> -->
+                                <?php endif; ?>
+                            </ul>
+                </div>
+              
+            </nav>
+   
+        
+        <div class="container">
+            <div class="row">
+            
+            <div class="col s12">
+                <?php echo $this->content; ?>
+            </div>
+            
+        </div>
+        </div>
+        
+             <div class="flass">
+            <?php
+
+            $flash = $this->flashMessenger();
+            $flash->setMessageOpenFormat('<div> <script>Materialize.toast("')
+                ->setMessageSeparatorString('')
+                ->setMessageCloseString('", 4000)</script></div><div>');
+
+            echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+            echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+            echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+            echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+
+            ?>
+        </div>
+        
+        <script async defer src="//assets.pinterest.com/js/pinit.js"></script>
+        <div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.8";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+    </body>
+    <footer class="footer-copyright">
+        <div>
+             <p class="center">
+                No made in China
+            </p>
+            <p class="center">
+                
+                Made with love<?php //echo date('Y') ?> while listening to good music. By Mandarina Tech.
+            </p>
+        </div> 
+        </footer>  
+</html>

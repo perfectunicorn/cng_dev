@@ -1,0 +1,40 @@
+<?php $this->headLink()->appendStylesheet('/css/materialize.css'); ?>
+<?php $this->headLink()->appendStylesheet('/css/index.css'); ?>
+<h1>Edit Blog Post</h1>
+
+<?php
+
+/** @var $form \Blog\Form\Add */
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+
+?>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('title')); ?>
+</div>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('content')); ?>
+</div>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('category_id')); ?>
+</div>
+
+<?php echo $this->formHidden($form->get('id')); ?>
+<?php echo $this->formSubmit($form->get('submit')); ?>
+<?php echo $this->form()->closeTag(); ?>
+
+<script>
+    $(document).ready(function() {
+    $('select').material_select();
+  });
+</script>
+
+<script>
+                // Replace the <textarea id="editor1"> with a CKEditor
+                // instance, using default configuration.
+                CKEDITOR.replace( 'topic_content' );
+</script>

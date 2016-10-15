@@ -1,0 +1,41 @@
+<h1>Información básica</h1>
+
+<?php
+
+/** @var $form \User\Form\Add */
+$form = $this->form;
+$form->prepare();
+echo $this->form()->openTag($form);
+
+?>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('firstName')); ?>
+</div>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('lastName')); ?>
+</div>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('gender')); ?>
+</div>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('age')); ?>
+</div>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('bio')); ?>
+</div>
+
+<?php echo $this->formHidden($form->get('id')); ?>
+<?php echo $this->formSubmit($form->get('submit')); ?>
+<?php echo $this->form()->closeTag(); ?>
+
+<script>
+    $(document).ready(function() {
+    $('select').material_select();
+  });
+</script>
+

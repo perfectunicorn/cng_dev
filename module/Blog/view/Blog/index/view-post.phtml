@@ -1,0 +1,183 @@
+
+<script>
+    $(".submit").click(function(){
+                $.ajax(
+                        {
+                            async:true,
+                            type:"POST",
+                            url:"<?php echo $this->url('display-post', array('posted' => $post->getCreated(),'categorySlug' => $post->getCategory()->getSlug(), 'postSlug' => $post->getSlug()));?>",
+                            success: function(response){
+                                $("#post-comments").html(response);
+                                
+                            }
+                        });
+            });
+            
+            $('.chips').material_chip();
+</script>
+
+<script>
+    $(document).ready(function() {
+    $('select').material_select();
+  });
+</script>
+
+
+
+
+<?php $user = $this->identity();?>
+
+<?php 
+$post = $this->post; 
+$form=$this->form;
+$form->setAttribute('action', $this->url('display-post', array('posted' => $post->getCreated(),'categorySlug' => $post->getCategory()->getSlug(), 'postSlug' => $post->getSlug())));
+$form->prepare();
+echo $this->form()->openTag($form);
+
+?>
+
+<?php $postedAt = $this->dateFormat(
+    $post->getCreated(),
+    IntlDateFormatter::GREGORIAN, // Date
+    IntlDateFormatter::NONE, // Time
+    'es_MX'
+); ?>
+
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <div class="post-title">
+                <h1>
+                    <?php echo $this->escapeHtml($post->getTitle()); ?>
+                </h1>
+            </div>    
+            <div class="metadata">
+            <?php if ($author = $post->getAuthor()) : ?>
+                <div class="chip white">
+                    <img src="<?php echo $this->basePath('/public/img/profile/'.$author->getNickname().'.png')?>" alt="Contact Person">
+                    <a href="<?php echo $this->url('profile', array('nickname' => $author->getNickname()));?>"><?php echo sprintf($author->getFirstName() . ' ' . $author->getLastName()); ?></a> 
+                </div>
+            <?php endif; ?>
+                <i class="material-icons tiny teal-text circle">today</i> <?php echo sprintf($postedAt); ?>
+                <i class="material-icons tiny teal-text circle">subject</i> <?php echo sprintf($post->getCategory()->getName());?>
+                <i class="material-icons tiny teal-text circle">mode_comment</i><?php echo sprintf($this->paginator->getTotalItemCount());?>
+                <a data-pin-do="buttonPin" data-pin-count="beside" data-pin-lang="es" data-pin-save="true" href="https://es.pinterest.com/pin/create/button/?url=https%3A%2F%2Fwww.flickr.com%2Fphotos%2Fkentbrew%2F6851755809%2F&media=https%3A%2F%2Ffarm8.staticflickr.com%2F7027%2F6851755809_df5b2051c9_z.jpg&description=Next%20stop%3A%20Pinterest"></a>
+                <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse">Share</a></div>
+            <a class="twitter-share-button"
+  href="https://twitter.com/intent/tweet">
+Tweet</a>
+
+            </div>
+            
+            <div class="skills"> 
+                <ul class="left valign-wrapper">   
+                <?php if (!empty($this->tags->getTotalItemCount())) : ?>
+                        <li><?php echo $this->escapeHtml("Tags: "); ?></li>  &nbsp;
+                        <li> </li>
+                        <?php foreach ($this->tags as $tag) :?>
+                        <?php $skill=$tag->getTag(); ?>
+                            <li class="chip teal lighten-2" >
+                                <a class="white-text" href="#">
+                                    <?php echo $this->escapeHtml($skill->getName()); ?>
+                                </a>
+
+                            </li> 
+                             &nbsp;
+
+                        <?php endforeach; ?>
+
+                    <?php else :?>
+                        <li><?php echo sprintf('Tags: Actualmente no hay etiquetas'); ?></li>
+                <?php endif; ?> 
+                </ul>        
+            </div>      
+    </div>
+        
+        <div class="fr-view">
+            <span><?php echo $post->getContent(); ?></span>
+        </div>
+            
+        
+    
+  
+<div class="col s12"> 
+     <p><h4>Únete a la discusión</h4></p>
+    <div class="add-comment">
+        
+        <div class="form-group">
+            <div>
+               
+                    <?php echo $this->formRow($form->get('comment')); ?>
+            </div>
+        </div>
+
+        <?php echo $this->formSubmit($form->get('submit')); ?>
+        <?php echo $this->form()->closeTag(); ?>
+
+        </div>
+     
+    <?php if (!empty($this->paginator->getTotalItemCount())) : ?>
+
+
+    <div id="blog-posts">
+        
+        <p><h4> <i class="material-icons prefix">comment</i><?php echo $this->escapeHtml($this->paginator->getTotalItemCount()." comentarios"); ?>
+        </h4></p>
+        
+        <?php foreach ($this->paginator as $comment) :
+             
+        ?>
+            <?php /** @var \Blog\Entity\Post $post */ ?>
+            <?php $postedAt = $this->dateFormat(
+                $comment->getCreated(),
+                IntlDateFormatter::MEDIUM, // Date
+                IntlDateFormatter::MEDIUM, // Time
+                'en_US'
+            ); ?>
+
+            <div class="card z-depth-0">
+                <div class="card-action">
+                    <?php if ($author = $comment->getAuthor()) : ?>
+                       <div class="chip white">
+                            <img src="<?php echo $this->basePath('/public/img/profile/'.$author->getNickname().'.png')?>" alt="Contact Person">
+                            <a href="<?php echo $this->url('profile', array('nickname' => $author->getNickname()));?>"><?php echo sprintf($author->getFirstName() . ' ' . $author->getLastName()); ?></a> 
+                       </div>
+                        <?php echo sprintf($postedAt); ?>
+                   
+                    <?php endif; ?>
+                </div>
+                <div class="card-content">
+                        <?php echo $this->escapeHtml($comment->getComment()); ?>  
+                </div>
+             
+
+            </div>
+        <?php endforeach; ?>
+    </div>
+    
+ 
+
+    <div class="pagination-wrapper">
+        <?php
+
+        /*echo $this->paginationControl($this->paginator,
+            'Sliding',
+            'partial/pagination',
+            array('route' => 'blog/paged'));*/
+
+        ?>
+    </div>
+
+<?php else : ?>
+    <p><h4><?php echo sprintf('Actualmente no hay comentarios'); ?></h4></p>
+    
+   
+<?php endif; ?>
+
+     
+       
+</div>
+</div>
+</div>    
+
+
