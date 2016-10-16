@@ -6,6 +6,8 @@ use Application\Repository\RepositoryInterface;
 use Courses\Entity\Course;
 use Courses\Entity\Topic;
 use Courses\Entity\Comment;
+use Blog\Entity\Tag;
+use Blog\Entity\Skill;
 
 interface CourseRepository extends RepositoryInterface
 {
@@ -17,7 +19,7 @@ interface CourseRepository extends RepositoryInterface
      *
      * @return void
      */
-    public function save(Course $course, $authorId);
+    public function save(Course $course,$slug, $authorId);
 
     /**
      * @param $page int
@@ -32,7 +34,7 @@ interface CourseRepository extends RepositoryInterface
      *
      * @return Course|null
      */
-    public function find($categorySlug, $courseSlug);
+    public function find($categorySlug,$posted, $courseSlug);
 
     /**
      * @param $courseId int
@@ -55,7 +57,7 @@ interface CourseRepository extends RepositoryInterface
      *
      * @return void
      */
-    public function update(Course $course);
+    public function update(Course $course,$slug);
 
     /**
      * @param $courseId int
@@ -77,7 +79,7 @@ interface CourseRepository extends RepositoryInterface
      *
      * @return void
      */
-    public function saveTopic(Topic $topic, $authorId,$userId);
+    public function saveTopic(Topic $topic, $slug,$authorId,$userId);
     
       /**
      * @param $categorySlug string
@@ -85,7 +87,7 @@ interface CourseRepository extends RepositoryInterface
      *
      * @return Course|null
      */
-    public function findTopic($topicSlug);
+    public function findTopic($topicSlug,$posted);
     
        /**
      * @param $page int
@@ -103,7 +105,7 @@ interface CourseRepository extends RepositoryInterface
      *
      * @return void
      */
-    public function updateTopic(Topic $topic);
+    public function updateTopic(Topic $topic,$slug);
 
     /**
      * @param $courseId int
@@ -119,6 +121,18 @@ interface CourseRepository extends RepositoryInterface
     public function findCommentById($commentId);
     
     public function findCommentsByPost($topicId,$page);
+    
+     /*
+     * Tags
+     */
+    
+    public function saveTag(Tag $tag);
+    
+    public function findTag($tagName);
+    
+    public function addTagToPost(Tag $tag,$topic);
+    
+    public function findTagsByPost($topicId,$page);
 
 
 }

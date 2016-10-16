@@ -97,14 +97,17 @@ return array(
             'display-course' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/courses/courses/:categorySlug/:courseSlug',
+                    /*'route' => '/courses/courses/:categorySlug/:courseSlug',*/
+                    'route' => '/courses/:categorySlug/:posted/:courseSlug',
                     'constraints' => array(
+                        'posted' => '[0-9]+',
                         'categorySlug' => '[a-zA-Z0-9-]+',
                         'courseSlug' => '[a-zA-Z0-9-]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Courses\Controller\Index',
                         'action' => 'viewCourse',
+                        'page'          => 1,
                     ),
                 ),
             ),
@@ -152,8 +155,9 @@ return array(
             'display-topic' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/courses/topics/:topicSlug',
+                    'route' => '/courses/topics/:posted/:topicSlug',
                     'constraints' => array(
+                        'posted' => '[0-9]+',
                         'topicSlug' => '[a-zA-Z0-9-]+',
                     ),
                     'defaults' => array(
@@ -166,9 +170,11 @@ return array(
             'add-topic' => array(
                 'type' => 'Segment',
                 'options' => array(
-                    'route' => '/courses/add-topic/:courseId',
+                    'route' => '/courses/add-topic/:categorySlug/:posted/:courseSlug',
                     'constraints' => array(
-                        'courseId' => '[0-9]+',
+                        'posted' => '[0-9]+',
+                        'categorySlug' => '[a-zA-Z0-9-]+',
+                        'courseSlug' => '[a-zA-Z0-9-]+',
                     ),
                     'defaults' => array(
                         'controller' => 'Courses\Controller\Index',

@@ -10,10 +10,15 @@ use Courses\Entity\Hydrator\TopicHydrator;
 use Courses\Entity\Hydrator\CommentHydrator;
 use Courses\Entity\Hydrator\ReplyHydrator;
 use Courses\Entity\Hydrator\StudentHydrator;
+use Blog\Entity\Hydrator\SkillHydrator;
+use Blog\Entity\Hydrator\TagHydrator;
 
 use Courses\Entity\Course;
 use Courses\Entity\Topic;
 use Courses\Entity\Comment;
+use Blog\Entity\Tag; 
+use Blog\Entity\Skill; 
+
 
 use Zend\Db\Adapter\AdapterAwareTrait;
 use Zend\Db\ResultSet\HydratingResultSet;
@@ -24,14 +29,14 @@ class CourseRepositoryImpl implements CourseRepository
     use AdapterAwareTrait;
  
 
-    public function save(Course $course, $authorId)
+    public function save(Course $course,$slug, $authorId)
     {
           
         $sql = new \Zend\Db\Sql\Sql($this->adapter);
         $insert = $sql->insert()
             ->values(array(
                 'title' => $course->getTitle(),
-                'slug' => $course->getSlug(),
+                'slug' => $slug,
                 'content' => $course->getContent(),
                 'category_id' => $course->getCategory()->getId(),
                 'created' => time(),
@@ -71,6 +76,10 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
@@ -85,7 +94,7 @@ class CourseRepositoryImpl implements CourseRepository
         $paginatorAdapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->adapter, $resultSet);
         $paginator = new \Zend\Paginator\Paginator($paginatorAdapter);
         $paginator->setCurrentPageNumber($page);
-        $paginator->setItemCountPerPage(1);
+        $paginator->setItemCountPerPage(6);
 
         return $paginator;
     }
@@ -96,7 +105,7 @@ class CourseRepositoryImpl implements CourseRepository
      *
      * @return Course|null
      */
-    public function find($categorySlug, $courseSlug)
+    public function find($categorySlug,$posted, $courseSlug)
     {
         $sql = new \Zend\Db\Sql\Sql($this->adapter);
         $select = $sql->select();
@@ -124,12 +133,17 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
             ->where(array(
                 'c.slug' => $categorySlug,
                 'p.slug' => $courseSlug,
+                'p.created' => $posted,
             ));
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -179,6 +193,10 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
@@ -233,6 +251,10 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
@@ -259,13 +281,13 @@ class CourseRepositoryImpl implements CourseRepository
      *
      * @return void
      */
-    public function update(Course $course)
+    public function update(Course $course,$slug)
     {
         $sql = new \Zend\Db\Sql\Sql($this->adapter);
         $insert = $sql->update('course')
             ->set(array(
                 'title' => $course->getTitle(),
-                'slug' => $course->getSlug(),
+                'slug' => $slug,
                 'content' => $course->getContent(),
                 'category_id' => $course->getCategory()->getId(),
             ))
@@ -300,14 +322,14 @@ class CourseRepositoryImpl implements CourseRepository
      * 
      */
     
-    public function saveTopic(Topic $topic, $authorId,$courseId)
+    public function saveTopic(Topic $topic,$slug, $authorId,$courseId)
     {
         var_dump($topic);
         $sql = new \Zend\Db\Sql\Sql($this->adapter);
         $insert = $sql->insert()
             ->values(array(
                 'title' => $topic->getTitle(),
-                'slug' => $topic->getSlug(),
+                'slug' => $slug,
                 'content' => $topic->getContent(),
                 //'category_id' => $topic->getCategory()->getId(),
                 'created' => time(),
@@ -318,6 +340,9 @@ class CourseRepositoryImpl implements CourseRepository
 
         $statement = $sql->prepareStatementForSqlObject($insert);
         $statement->execute();
+        
+        $inserted_id =  $this->adapter->getDriver()->getLastGeneratedValue();
+        return $inserted_id;
     }
     
     /**
@@ -326,7 +351,7 @@ class CourseRepositoryImpl implements CourseRepository
      *
      * @return Course|null
      */
-    public function findTopic($topicSlug)
+    public function findTopic($topicSlug,$posted)
     {
      $sql = new \Zend\Db\Sql\Sql($this->adapter);
         $select = $sql->select();
@@ -354,11 +379,16 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
             ->where(array(
                 'p.slug' => $topicSlug,
+                'p.created' => $posted,
             ));
 
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -411,6 +441,10 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
@@ -463,6 +497,10 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
@@ -489,13 +527,13 @@ class CourseRepositoryImpl implements CourseRepository
      *
      * @return void
      */
-    public function updateTopic(Topic $topic)
+    public function updateTopic(Topic $topic,$slug)
     {
         $sql = new \Zend\Db\Sql\Sql($this->adapter);
         $insert = $sql->update('topic')
             ->set(array(
                 'title' => $topic->getTitle(),
-                'slug' => $topic->getSlug(),
+                'slug' => $slug,
                 'content' => $topic->getContent(),
                 //'course_id' => $topic->getCourse()->getId(),
             ))
@@ -593,7 +631,10 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
-                    'nickname',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
@@ -652,7 +693,10 @@ class CourseRepositoryImpl implements CourseRepository
                     'author_email'=>'email',
                     'author_created'=>'created',
                     'author_user_group'=>'user_group',
-                    'nickname',
+                    'author_nickname' => 'nickname',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
+                    'author_gender' => 'gender',
                 ),
                 $select::JOIN_LEFT
             )
@@ -675,6 +719,155 @@ class CourseRepositoryImpl implements CourseRepository
         
         return $paginator;
 
+    }
+    
+    /*
+     * 
+     * Tags
+     * 
+     * 
+     */
+    
+    public function saveTag(Tag $tag)
+    {
+        $sql = new \Zend\Db\Sql\Sql($this->adapter);
+        $insert = $sql->insert()
+            ->values(array(
+                'name' => $tag->getName(),
+            ))
+            ->into('tag');
+
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $statement->execute();
+        
+        $inserted_id =  $this->adapter->getDriver()->getLastGeneratedValue();
+        
+        return $inserted_id;
+    }
+    
+    
+    public function findTag($tagName)
+    {
+        $sql = new \Zend\Db\Sql\Sql($this->adapter);
+        $select = $sql->select();
+        $select->columns(array(
+            'id',
+            'name'
+        ))
+            ->from(array('p' => 'tag'))
+            ->where(array(
+                'p.name' => $tagName,
+            ));
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+
+        $hydrator = new AggregateHydrator();
+        $hydrator->add(new TagHydrator());
+
+        $resultSet = new HydratingResultSet($hydrator, new Tag());
+        $resultSet->initialize($results);
+        
+        return ($resultSet->count() > 0 ? $resultSet->current() : null);
+    }
+    
+    public function addTagToPost(Tag $tag,$topic)
+    {
+
+        $sql = new \Zend\Db\Sql\Sql($this->adapter);
+        $insert = $sql->insert()
+            ->values(array(
+                'topic_id' => $topic,
+                'tag_id' => $tag->getId(),
+            ))
+            ->into('topic_tag');
+
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $statement->execute();
+            
+    }
+ 
+    public function findTagsByPost($topicId,$page)
+   {
+        $sql = new \Zend\Db\Sql\Sql($this->adapter);
+        $select = $sql->select();
+        $select->columns(array(
+            'id',
+        ))
+            ->from(array('p' => 'topic_tag'))
+            ->join(
+                array('c' => 'tag'), // Table name
+                'c.id = p.tag_id', // Condition
+                array(
+                    'tag_id'=>'id', 
+                    'tag_name'=>'name', 
+                    //'created',
+                    ), // Columns
+                $select::JOIN_INNER
+            )
+            ->join(
+                array('a' => 'topic'),
+                'a.id = p.topic_id',
+                array(
+                    'topic_id'=>'id',
+                    'title',
+                    'slug',
+                    'content',
+                    'created',
+                ),
+                $select::JOIN_LEFT
+            )
+            ->where(array(
+                'p.topic_id' => $topicId,
+            ));
+
+
+        $hydrator = new AggregateHydrator();
+        $hydrator->add(new TagHydrator());
+        $hydrator->add(new SkillHydrator());
+        $hydrator->add(new ReplyHydrator());
+        $hydrator->add(new TopicHydrator());
+        $hydrator->add(new CategoryHydrator());
+        $hydrator->add(new UserHydrator());
+  
+        
+        $resultSet = new HydratingResultSet($hydrator, new Skill());
+        $paginatorAdapter = new \Zend\Paginator\Adapter\DbSelect($select, $this->adapter, $resultSet);
+        $paginator = new \Zend\Paginator\Paginator($paginatorAdapter);
+        $paginator->setCurrentPageNumber($page);
+        $paginator->setItemCountPerPage(1000);
+        
+        return $paginator;
+
+    }
+    
+    
+    public function findSlug($tagsStr)
+    {
+        $sql = new \Zend\Db\Sql\Sql($this->adapter);
+        $select = $sql->select();
+        $select->columns(array(
+                'id', 
+                'title', 
+                'content',
+                'slug',
+                'created',
+        ))
+            ->from(array('p' => 'topic'))
+            ->where(array(
+                'p.slug' => $slugStr,
+            ));
+
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+
+        $hydrator = new AggregateHydrator();
+        $hydrator->add(new PostHydrator());
+
+        $resultSet = new HydratingResultSet($hydrator, new Topic());
+        $resultSet->initialize($results);
+        
+        return ($resultSet->count() > 0 ? $resultSet->current() : null);
     }
     
 }

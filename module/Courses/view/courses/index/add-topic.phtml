@@ -17,12 +17,14 @@ echo $this->form()->openTag($form);
 </div>
 
 <div class="form-group">
-    <?php echo $this->formRow($form->get('topic_slug')); ?>
+    <?php echo $this->formRow($form->get('topic_content')); ?>
 </div>
 
 <div class="form-group">
-    <?php echo $this->formRow($form->get('topic_content')); ?>
+    <?php echo $this->formRow($form->get('tags')); ?>
+    <p class="help-block">Separar tags con comas (,)</p>
 </div>
+
 
 <?php echo $this->formHidden($form->get('courseId')); ?>
 

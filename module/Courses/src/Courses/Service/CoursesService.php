@@ -5,6 +5,7 @@ namespace Courses\Service;
 use Courses\Entity\Course;
 use Courses\Entity\Topic;
 use Courses\Entity\Comment;
+use Blog\Entity\Tag;
 
 interface CoursesService
 {
@@ -16,7 +17,7 @@ interface CoursesService
      *
      * @return Course
      */
-    public function save(Course $course, $authorId);
+    public function save(Course $course,$slug, $authorId);
 
     /**
      * @param $page int
@@ -31,7 +32,7 @@ interface CoursesService
      *
      * @return Course|null
      */
-    public function find($categorySlug, $courseSlug);
+    public function find($categorySlug,$posted, $courseSlug);
 
     /**
      * @param $courseId int
@@ -52,7 +53,7 @@ interface CoursesService
      *
      * @return void
      */
-    public function update(Course $course);
+    public function update(Course $course,$slug);
 
     /**
      * @param $courseId int
@@ -74,7 +75,7 @@ interface CoursesService
      *
      * @return Topic
      */
-    public function saveTopic(Topic $topic, $authorId,$courseId);
+    public function saveTopic(Topic $topic,$slug, $authorId,$courseId);
     
     /**
      * @param $categorySlug string
@@ -99,7 +100,7 @@ interface CoursesService
      *
      * @return Course|null
      */
-     public function findTopic($topicSlug);
+     public function findTopic($topicSlug,$posted);
 
     /**
      * @param $courseId int
@@ -113,7 +114,7 @@ interface CoursesService
      *
      * @return void
      */
-    public function updateTopic(Topic $topic);
+    public function updateTopic(Topic $topic,$slug);
 
     /**
      * @param $courseId int
@@ -134,5 +135,18 @@ interface CoursesService
     public function findCommentById($commentId);
     
     public function findCommentsByPost($topicId,$page);
+    
+        /*
+     * Tags service
+     * 
+    */
+    
+    public function saveTag(Tag $tag);
+    
+    public function findTag($tagName);
+    
+    public function addTagToPost(Tag $tag,$topic);
+    
+    public function findTagsByPost($topicId,$page);
 
 } 

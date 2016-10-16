@@ -39,6 +39,7 @@ class UserRepositoryImpl implements UserRepository
                 'user_group' => $user->getUserGroup(),
                 'nickname' => $user->getNickname(),
                 'gender' => $user->getGender(),
+                'bio'=>$user->getBio(),
             ))
             ->into('user');
 
@@ -246,6 +247,10 @@ class UserRepositoryImpl implements UserRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_gender' => 'gender',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
                 ),
                 $select::JOIN_LEFT
             )
@@ -295,6 +300,10 @@ class UserRepositoryImpl implements UserRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_gender' => 'gender',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
                 ),
                 $select::JOIN_LEFT
             )
@@ -408,6 +417,10 @@ class UserRepositoryImpl implements UserRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_gender' => 'gender',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
                 ),
                 $select::JOIN_LEFT
             )
@@ -465,6 +478,10 @@ class UserRepositoryImpl implements UserRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_gender' => 'gender',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
                 ),
                 $select::JOIN_LEFT
             )
@@ -570,6 +587,10 @@ class UserRepositoryImpl implements UserRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_gender' => 'gender',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
                 ),
                 $select::JOIN_LEFT
             )
@@ -618,6 +639,10 @@ class UserRepositoryImpl implements UserRepository
                     'author_email' => 'email',
                     'author_created' => 'created',
                     'author_user_group' => 'user_group',
+                    'author_nickname' => 'nickname',
+                    'author_gender' => 'gender',
+                    'author_age' => 'age',
+                    'author_bio' => 'bio',
                 ),
                 $select::JOIN_LEFT
             )

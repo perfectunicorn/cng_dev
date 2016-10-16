@@ -13,7 +13,7 @@ use Zend\Validator\ValidatorChain;
 
 class AddCourse extends InputFilter
 {
-    public function __construct()
+     public function __construct()
     {
         $title = new Input('title');
         $title->setRequired(true);
@@ -29,10 +29,17 @@ class AddCourse extends InputFilter
         $content->setRequired(true);
         $content->setValidatorChain($this->getContentValidatorChain());
         $content->setFilterChain($this->getStringTrimFilterChain());
+        
+        $tags = new Input('tags');
+        $tags->setRequired(true);
+        $tags->setValidatorChain($this->getTagsValidatorChain());
+        $tags->setFilterChain($this->getStringTrimFilterChain());
+        
 
         $this->add($title);
-        $this->add($slug);
+        //$this->add($slug);
         $this->add($content);
+        //$this->add($tags);
     }
 
     /**
@@ -70,10 +77,23 @@ class AddCourse extends InputFilter
     {
         $stringLength = new StringLength();
         $stringLength->setMin(5);
-
+        
         $validatorChain = new ValidatorChain();
-        $validatorChain->attach(new Alnum(true));
+        //$validatorChain->attach(new Alnum(true));
         $validatorChain->attach($stringLength);
+
+        return $validatorChain;
+    }
+    
+    
+     protected function getTagsValidatorChain()
+    {
+        //$stringLength = new StringLength();
+        //$stringLength->setMin(5);
+        
+        $validatorChain = new ValidatorChain();
+        $validatorChain->attach(new Regex("/^[a-zA-Z0-9,-]*$/"));
+        //$validatorChain->attach($stringLength);
 
         return $validatorChain;
     }

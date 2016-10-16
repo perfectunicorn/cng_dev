@@ -5,6 +5,7 @@ namespace Courses\Service;
 use Courses\Entity\Course;
 use Courses\Entity\Topic;
 use Courses\Entity\Comment;
+use Blog\Entity\Tag;
 
 class CoursesServiceImpl implements CoursesService
 {
@@ -22,9 +23,9 @@ class CoursesServiceImpl implements CoursesService
      *
      * @return Course
      */
-    public function save(Course $course, $authorId)
+    public function save(Course $course,$slug, $authorId)
     {
-        $this->courseRepository->save($course, $authorId);
+        return $this->courseRepository->save($course,$slug, $authorId);
     }
 
     /**
@@ -43,9 +44,9 @@ class CoursesServiceImpl implements CoursesService
      *
      * @return Course|null
      */
-    public function find($categorySlug, $courseSlug)
+    public function find($categorySlug,$posted, $courseSlug)
     {
-        return $this->courseRepository->find($categorySlug, $courseSlug);
+        return $this->courseRepository->find($categorySlug,$posted, $courseSlug);
     }
 
     /**
@@ -73,9 +74,9 @@ class CoursesServiceImpl implements CoursesService
      *
      * @return void
      */
-    public function update(Course $course)
+    public function update(Course $course,$slug)
     {
-        $this->courseRepository->update($course);
+        $this->courseRepository->update($course,$slug);
     }
 
     /**
@@ -117,9 +118,12 @@ class CoursesServiceImpl implements CoursesService
      *
      * @return Topic
      */
-    public function saveTopic(Topic $course, $authorId,$courseId)
+    public function saveTopic(Topic $course,$slug, $authorId,$courseId)
     {
-        $this->courseRepository->saveTopic($course, $authorId,$courseId);
+        
+        //ERROR AL GUARDAR EN TOPIC_TAG PORQUE EN EL SERVICIO NO SE ESTABA RETORNANDO
+        //EL VALOR DE ID DEL REGISTRO INSERTADO
+       return $this->courseRepository->saveTopic($course,$slug, $authorId,$courseId);
     }
     
        /**
@@ -128,9 +132,9 @@ class CoursesServiceImpl implements CoursesService
      *
      * @return Course|null
      */
-    public function findTopic($topicSlug)
+    public function findTopic($topicSlug,$posted)
     {
-        return $this->courseRepository->findTopic($topicSlug);
+        return $this->courseRepository->findTopic($topicSlug,$posted);
     }
     
        /**
@@ -164,9 +168,9 @@ class CoursesServiceImpl implements CoursesService
      *
      * @return void
      */
-    public function updateTopic(Topic $topic)
+    public function updateTopic(Topic $topic,$slug)
     {
-        $this->courseRepository->updateTopic($topic);
+        $this->courseRepository->updateTopic($topic,$slug);
     }
 
     /**
@@ -186,7 +190,7 @@ class CoursesServiceImpl implements CoursesService
     
     public function saveComment(Comment $comment, $authorId,$topicId)
     {
-        $this->courseRepository->saveComment($comment, $authorId,$topicId);
+        return $this->courseRepository->saveComment($comment, $authorId,$topicId);
     }
     
     public function deleteComment($commentId)
@@ -202,6 +206,32 @@ class CoursesServiceImpl implements CoursesService
     public function findCommentsByPost($topicId,$page)
     {
         return $this->courseRepository->findCommentsByPost($topicId,$page);
+    }
+    
+    /*
+     * Tags service
+     * 
+    */
+    
+    public function saveTag(Tag $tag)
+    {
+        return $this->courseRepository->saveTag($tag);
+    }
+    
+    
+    public function findTag($tagName)
+    {
+        return $this->courseRepository->findTag($tagName);
+    }
+    
+    public function addTagToPost(Tag $tag,$topic)
+    {
+        $this->courseRepository->addTagToPost($tag,$topic);
+    }
+    
+     public function findTagsByPost($topicId,$page)
+    {
+        return $this->courseRepository->findTagsByPost($topicId,$page);
     }
 
 

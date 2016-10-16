@@ -5,14 +5,20 @@ namespace Courses\Controller;
 use Courses\Entity\Course;
 use Courses\Entity\Topic;
 use Courses\Entity\Comment;
+use Blog\Entity\Tag;
+use Blog\Entity\Skill;
+
 use Courses\Form\Add;
 use Courses\Form\Edit;
 use Courses\Form\AddTopic;
 use Courses\Form\CommentsForm;
 use Courses\Form\EditTopic;
+
 use Courses\InputFilter\AddCourse;
 use Courses\InputFilter\TopicFilter;
+
 use Zend\Http\Response;
+use Zend\Filter\StaticFilter;
 use Zend\Mvc\Controller\AbstractActionController;
 //use Zend\Stdlib\Hydrator\Aggregate\AggregateHydrator;
 use Zend\View\Model\ViewModel;
@@ -31,24 +37,31 @@ class IndexController extends AbstractActionController
     {
         $this->layout('layout/user');
         if (!$user = $this->identity()) {
-            $this->flashMessenger()->addErrorMessage('You must be logged in to add courses');
+            $this->flashMessenger()->addErrorMessage('Debes iniciar sesión para crear cursos');
             return $this->redirect()->toRoute('courses');
         }
-
-        $form = new Add();
+        
+        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+        $form = new Add($dbAdapter);
         $variables = array('form' => $form);
 
         if ($this->request->isPost()) {
             $blogPost = new Course();
+            
             $form->bind($blogPost);
             $form->setInputFilter(new AddCourse());
             $form->setData($this->request->getPost());
-
+            var_dump($this->request->getPost());
             if ($form->isValid()) {
                 
-                $this->getCoursesService()->save($blogPost, $user->id);
+                $data = $this->request->getPost();
                 
-                $this->flashMessenger()->addSuccessMessage('The course has been added!');
+                $slugStr=$data['title'];
+                $slug=$this->makeSlug($slugStr); 
+                
+                $course=$this->getCoursesService()->save($blogPost,$slug,$user->id);
+                 
+                $this->flashMessenger()->addSuccessMessage('El curso ha sido creado');
             }
         }
         
@@ -66,7 +79,8 @@ class IndexController extends AbstractActionController
         
         $categorySlug = $this->params()->fromRoute('categorySlug');
         $courseSlug = $this->params()->fromRoute('courseSlug');
-        $course = $this->getCoursesService()->find($categorySlug, $courseSlug);
+        $posted = $this->params()->fromRoute('posted');
+        $course = $this->getCoursesService()->find($categorySlug, $posted,$courseSlug);
         //var_dump($course->getId());
         $paginator=$this->getCoursesService()->fetchTopicsByCourse($course->getId(),$this->params()->fromRoute('page'));
 
@@ -85,16 +99,23 @@ class IndexController extends AbstractActionController
             $this->flashMessenger()->addErrorMessage('Debes iniciar sesión para editar un curso');
             return $this->redirect()->toRoute('blog');
         }
-        $form = new Edit();
+        //$form = new Edit();
+        $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
+        $form = new Add($dbAdapter);
+        
 
         if ($this->request->isPost()) {
             $course = new Course();
             $form->bind($course);
+            $form->setInputFilter(new AddCourse());
             $form->setData($this->request->getPost());
 
             if ($form->isValid()) {
-                $this->getCoursesService()->update($course);
-                $this->flashMessenger()->addSuccessMessage('The course has been updated!');
+                $data = $this->request->getPost();
+                $slugStr=$data['title'];
+                $slug=$this->makeSlug($slugStr);
+                $this->getCoursesService()->update($course,$slug);
+                $this->flashMessenger()->addSuccessMessage('El curso ha sido actualizado');
             }
         } else {
             $course = $this->getCoursesService()->findById($this->params()->fromRoute('courseId'));
@@ -118,7 +139,7 @@ class IndexController extends AbstractActionController
     {
         $this->layout('layout/user');
         $this->getCoursesService()->delete($this->params()->fromRoute('courseId'));
-        $this->flashMessenger()->addSuccessMessage('The course has been deleted!');
+        $this->flashMessenger()->addSuccessMessage('El curso ha sido eliminado');
         return $this->redirect()->toRoute('courses');
     }
 
@@ -131,31 +152,42 @@ class IndexController extends AbstractActionController
     {
         $this->layout('layout/user');
         if (!$user = $this->identity()) {
-            $this->flashMessenger()->addErrorMessage('You must be logged in to add courses');
+            $this->flashMessenger()->addErrorMessage('Debes iniciar sesion para crear lecciones');
             return $this->redirect()->toRoute('courses');
         }
         
-        $course = $this->getCoursesService()->findById($this->params()->fromRoute('courseId'));
+        $categorySlug = $this->params()->fromRoute('categorySlug');
+        $courseSlug = $this->params()->fromRoute('courseSlug');
+        $posted = $this->params()->fromRoute('posted');
+        $course = $this->getCoursesService()->find($categorySlug,$posted,$courseSlug);
         
         $form = new AddTopic();
         $variables = array('form' => $form);
        
-
         if ($this->request->isPost()) {
             $blogPost = new Topic(); 
+            
             $form->bind($blogPost);
-             
-            $form->setInputFilter(new TopicFilter());
+            //$form->setInputFilter(new TopicFilter());
             $form->setData($this->request->getPost());
             
             if ($form->isValid()) {
+                $data = $this->request->getPost();
+                $tagsStr=$data['tags'];
+                
+                //AQUI HUBO ERROR POR LLAMAR A TITLE(FORM) Y NO A TOPIC TITLE
+                $slugStr=$data['topic_title'];
+                var_dump($slugStr);
+                $slug=$this->makeSlug($slugStr); 
+                var_dump($slug);
                 //var_dump($blogPost);
-                $course = $this->getCoursesService()->findById($this->params()->fromRoute('courseId'));
-                $this->getCoursesService()->saveTopic($blogPost, $user->id,$course->id);
+                //$course = $this->getCoursesService()->findById($this->params()->fromRoute('courseId'));
+                $topic=$this->getCoursesService()->saveTopic($blogPost,$slug, $user->id,$course->id);
+                $this->addTagsToPost($tagsStr, $topic); 
                 $this->flashMessenger()->addSuccessMessage('The topic has been added!');
             }
         }else {
-            $course = $this->getCoursesService()->findById($this->params()->fromRoute('courseId'));
+            //$course = $this->getCoursesService()->findById($this->params()->fromRoute('courseId'));
             if ($course == null) {
                 $this->getResponse()->setStatusCode(Response::STATUS_CODE_404);
             } else {
@@ -174,11 +206,19 @@ class IndexController extends AbstractActionController
 
         if ($this->request->isPost()) {
             $topic = new Topic();
+            
             $form->bind($topic);
             $form->setData($this->request->getPost());
                         
             if ($form->isValid()) {
-                $this->getCoursesService()->updateTopic($topic);
+                
+                //ERROR no se declaro la variable data
+                $data = $this->request->getPost();
+                $slugStr=$data['topic_title'];
+                $slug=$this->makeSlug($slugStr);
+                //ERROR: se puso $course en lugar de $topic 
+                $this->getCoursesService()->updateTopic($topic,$slug);
+                //$this->getCoursesService()->updateTopic($topic);
                 $this->flashMessenger()->addSuccessMessage('The topic has been updated!');
             }
         } else {
@@ -222,7 +262,8 @@ class IndexController extends AbstractActionController
         }
         
         $topicSlug = $this->params()->fromRoute('topicSlug');
-        $topic = $this->getCoursesService()->findTopic($topicSlug);
+        $posted = $this->params()->fromRoute('posted');
+        $topic = $this->getCoursesService()->findTopic($topicSlug,$posted);
         
         $form=new CommentsForm();
         
@@ -244,10 +285,13 @@ class IndexController extends AbstractActionController
             }
         }
 
-        $paginator=$this->getCoursesService()->findCommentsByPost($topic->getId(),$this->params()->fromRoute('page'));
-        //var_dump($paginator);
+                $paginator=$this->getCoursesService()->findCommentsByPost($topic->getId(),$this->params()->fromRoute('page'));
+                $tags=$this->getCoursesService()->findTagsByPost($topic->getId(),$this->params()->fromRoute('page'));
+                
+               
         return new ViewModel(array(
             'topic' => $topic,
+            'tags'=>$tags,
             'form' => $form,
             'paginator' => $paginator,
         ));
@@ -256,6 +300,54 @@ class IndexController extends AbstractActionController
             'topic' => $topic,
         ));*/
     }
+    
+        /**
+     * Adds/updates tags in the given post.
+     */
+    private function addTagsToPost($tagsStr, $topic) 
+    {   
+        // array de tags
+        $tags = explode(',', strtolower($tagsStr));
+
+        foreach ($tags as $tagName) {
+            
+            //ERROR POR NO IMPORTAR EL STATIC FILTER
+            $tagName = StaticFilter::execute($tagName, 'StringTrim');
+            if (empty($tagName)) {
+                continue; 
+            }
+            
+            $tag=$this->getCoursesService()->findTag($tagName);
+             
+            if ($tag == null)
+            {
+                $tag = new Tag();
+                $tag->setName($tagName);
+                $tag->setId($this->getCoursesService()->saveTag($tag));
+            }
+            
+            $this->getCoursesService()->addTagToPost($tag,$topic);
+           
+            
+        }
+    }
+    
+      private function makeSlug($slugStr) 
+    {   
+        $value = strtolower($slugStr);
+        $separator="-";
+
+        if (function_exists('iconv')) {
+            $value = iconv('UTF-8', 'ASCII//TRANSLIT', $value);
+        }
+
+        $value = preg_replace("/[^[a-z0-9]+/", ' ', $value);
+        $value = trim($value);
+        $value = preg_replace("/[\s]/", $separator, $value);
+        
+        return $value;
+           
+    } 
     
     /**
      * @return \Courses\Service\CoursesService $coursesService

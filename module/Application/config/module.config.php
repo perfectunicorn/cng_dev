@@ -12,6 +12,7 @@ namespace Application;
 return array(
     'router' => array(
         'routes' => array(
+            
             'home' => array(
                 'type' => 'Zend\Mvc\Router\Http\Literal',
                 'options' => array(
@@ -22,6 +23,48 @@ return array(
                     ),
                 ),
             ),
+            
+            'sign-up' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/user/index/add',
+                    'constraints' => array(
+                        'categorySlug' => '[a-zA-Z0-9-]+',
+                        'postSlug' => '[a-zA-Z0-9-]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'User\Controller\Index',
+                        'action' => 'add',
+                    ),
+                ),
+            ),
+            
+            'sign-in' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/user/index/login',
+                    'constraints' => array(
+                        'categorySlug' => '[a-zA-Z0-9-]+',
+                        'postSlug' => '[a-zA-Z0-9-]+',
+                    ),
+                    'defaults' => array(
+                        'controller' => 'User\Controller\Index',
+                        'action' => 'login',
+                    ),
+                ),
+            ),
+            
+            'about' => array(
+                'type' => 'Segment',
+                'options' => array(
+                    'route' => '/application/index/about',
+                    'defaults' => array(
+                        'controller' => 'Application\Controller\Index',
+                        'action' => 'about',
+                    ),
+                ),
+            ),
+
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
             // module. Simply drop new controllers in, and you can access them
@@ -89,6 +132,7 @@ return array(
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
             'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
+            'partial/pagination'      => __DIR__ . '/../view/partial/pagination.phtml',
         ),
         'template_path_stack' => array(
             __DIR__ . '/../view',

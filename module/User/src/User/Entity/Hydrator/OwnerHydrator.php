@@ -32,6 +32,10 @@ class OwnerHydrator implements HydratorInterface
             'email' => $owner->getEmail(),
             'created' => $owner->getCreated(),
             'userGroup' => $owner->getUserGroup(),
+            'nickname' => $owner->getNickname(),
+            'gender' => $author->getGender(),
+            'age' => $owner->getAge(),
+            'bio' => $owner->getBio(),
         );
     }
 
@@ -56,6 +60,10 @@ class OwnerHydrator implements HydratorInterface
         $owner->setEmail(isset($data['owner_email']) ? $data['owner_email'] : null);
         $owner->setCreated(isset($data['owner_created']) ? $data['owner_created'] : null);
         $owner->setUserGroup(isset($data['owner_user_group']) ? $data['owner_user_group'] : null);
+        $owner->setNickname(isset($data['owner_nickname']) ? $data['owner_nickname'] : null);
+        $owner->setGender(isset($data['owner_gender']) ? $data['owner_gender'] : null);
+        $owner->setAge(isset($data['owner_age']) ? $data['owner_age'] : null);
+        $owner->setBio(isset($data['owner_bio']) ? $data['owner_bio'] : null);
         $object->setOwner($owner);
 
         return $object;

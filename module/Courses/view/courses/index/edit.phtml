@@ -14,10 +14,6 @@ echo $this->form()->openTag($form);
 </div>
 
 <div class="form-group">
-    <?php echo $this->formRow($form->get('slug')); ?>
-</div>
-
-<div class="form-group">
     <?php echo $this->formRow($form->get('content')); ?>
 </div>
 
@@ -28,3 +24,9 @@ echo $this->form()->openTag($form);
 <?php echo $this->formHidden($form->get('id')); ?>
 <?php echo $this->formSubmit($form->get('submit')); ?>
 <?php echo $this->form()->closeTag(); ?>
+
+<script>
+    $(document).ready(function() {
+    $('select').material_select();
+  });
+</script>

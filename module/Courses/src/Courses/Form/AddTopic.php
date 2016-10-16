@@ -21,11 +21,11 @@ class AddTopic extends Form
         $hydrator->add(new CategoryHydrator());
         $this->setHydrator($hydrator);
 
-        
+        $id = new Element\Hidden('id');
         $courseId = new Element\Hidden('courseId');
-        
+      
         $title = new Element\Text('topic_title');
-        $title->setLabel('Título del tema');
+        $title->setLabel('Título');
         $title->setAttribute('class', 'form-control');
 
         $slug = new Element\Text('topic_slug');
@@ -38,16 +38,23 @@ class AddTopic extends Form
            'class'=> 'form-control' ,
             'id'=>'topic_content'
         ));
+        
+        $tags= new Element\Text('tags');
+        $tags->setLabel('Tags');
+        $tags->setAttribute('class', 'form-control');
+        $tags->setAttribute('placeholder', 'html,javascript,css');
 
         
         $submit = new Element\Submit('submit');
-        $submit->setValue('Crear tema');
+        $submit->setValue('Publicar');
         $submit->setAttribute('class', 'btn btn-primary');
 
+        $this->add($id);
         $this->add($courseId);
         $this->add($title);
         $this->add($slug);
         $this->add($content);
+        $this->add($tags);
         $this->add($submit);
     }
 } 

@@ -16,6 +16,32 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
+        $viewModel = new ViewModel();
+        $viewModel->setTerminal(true);
+
+    return $viewModel;
+    }
+
+    public function aboutAction()
+    {
         return new ViewModel();
+
+    }
+    
+    private function makeSlug($slugStr) 
+    {   
+        $value = strtolower($slugStr);
+        $separator="-";
+
+        if (function_exists('iconv')) {
+            $value = iconv('UTF-8', 'ASCII//TRANSLIT', $value);
+        }
+
+        $value = preg_replace("/[^[a-z0-9]+/", ' ', $value);
+        $value = trim($value);
+        $value = preg_replace("/[\s]/", $separator, $value);
+        
+        return $value;
+           
     }
 }

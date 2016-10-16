@@ -54,7 +54,7 @@ echo $this->form()->openTag($form);
             <div class="metadata">
             <?php if ($author = $post->getAuthor()) : ?>
                 <div class="chip white">
-                    <img src="<?php echo $this->basePath('/public/img/profile/'.$author->getNickname().'.png')?>" alt="Contact Person">
+                    <img src="<?php echo $this->basePath('/img/profile/'.$author->getNickname().'.png')?>" alt="Contact Person">
                     <a href="<?php echo $this->url('profile', array('nickname' => $author->getNickname()));?>"><?php echo sprintf($author->getFirstName() . ' ' . $author->getLastName()); ?></a> 
                 </div>
             <?php endif; ?>

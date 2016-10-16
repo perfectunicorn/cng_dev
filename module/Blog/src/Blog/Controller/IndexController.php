@@ -8,6 +8,7 @@ use Blog\Entity\Tag;
 
 use Blog\Form\Add;
 use Blog\Form\CommentsForm;
+
 use Blog\InputFilter\AddPost;
 
 use Zend\Filter\StaticFilter;
@@ -64,13 +65,9 @@ class IndexController extends AbstractActionController
                 $slugStr=$data['title'];
                 $slug=$this->makeSlug($slugStr); 
 
+                
                 $post=$this->getBlogService()->save($blogPost, $slug,$user->id);
-                
-                
-
                 $this->addTagsToPost($tagsStr, $post); 
-                
-                
                 $this->flashMessenger()->addSuccessMessage('El post ha sido creado');
             }
         }
