@@ -6,10 +6,10 @@ use Blog\Entity\Post;
 use Blog\Entity\Comment;
 use Blog\Entity\Tag;
 
-use Blog\Form\Add;
+use Blog\Form\AddPost;
 use Blog\Form\CommentsForm;
 
-use Blog\InputFilter\AddPost;
+use Blog\InputFilter\PostFilter;
 
 use Zend\Filter\StaticFilter;
 use Zend\Http\Response;
@@ -34,7 +34,8 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-        $this->layout('layout/user');
+        $this->layout('layout/courses');
+        
         return new ViewModel(array(
             'paginator' => $this->getBlogService()->fetch($this->params()->fromRoute('page')),
         ));
@@ -49,14 +50,14 @@ class IndexController extends AbstractActionController
         }
 
         $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-        $form = new Add($dbAdapter);
+        $form = new AddPost($dbAdapter);
         $variables = array('form' => $form);
 
         if ($this->request->isPost()) {
             $blogPost = new Post();
-           
+            
             $form->bind($blogPost);
-            $form->setInputFilter(new AddPost());
+            $form->setInputFilter(new PostFilter());
             $form->setData($this->request->getPost());
 
             if ($form->isValid()) {
@@ -68,7 +69,9 @@ class IndexController extends AbstractActionController
                 
                 $post=$this->getBlogService()->save($blogPost, $slug,$user->id);
                 $this->addTagsToPost($tagsStr, $post); 
+                
                 $this->flashMessenger()->addSuccessMessage('El post ha sido creado');
+                return $this->redirect()->toRoute('blog');
             }
         }
 
@@ -128,15 +131,16 @@ class IndexController extends AbstractActionController
             $this->flashMessenger()->addErrorMessage('Debes iniciar sesión para editar un post');
             return $this->redirect()->toRoute('blog');
         }
+
         
         $dbAdapter = $this->getServiceLocator()->get('Zend\Db\Adapter\Adapter');
-        $form = new Add($dbAdapter);
+        $form = new AddPost($dbAdapter);
 
         if ($this->request->isPost()) {
             $post = new Post();
             $form->bind($post);
          
-            $form->setInputFilter(new AddPost());
+            $form->setInputFilter(new PostFilter());
             $form->setData($this->request->getPost());
              
             if ($form->isValid()) {
@@ -146,6 +150,7 @@ class IndexController extends AbstractActionController
                
                 $this->getBlogService()->update($post,$slug);
                 $this->flashMessenger()->addSuccessMessage('El post ha sido actualizado');
+                return $this->redirect()->toRoute('blog');
             }
         } else {
              $categorySlug = $this->params()->fromRoute('categorySlug');

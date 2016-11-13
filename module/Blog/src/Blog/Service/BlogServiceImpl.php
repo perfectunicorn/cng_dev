@@ -52,6 +52,11 @@ class BlogServiceImpl implements BlogService
     {
         return $this->postRepository->findById($postId);
     }
+    
+     public function findByUser($userId)
+    {
+        return $this->postRepository->findByUser($userId);
+    }
 
     public function update(Post $post,$slug)
     {

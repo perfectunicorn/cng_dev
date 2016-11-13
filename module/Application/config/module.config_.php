@@ -24,19 +24,6 @@ return array(
                 ),
             ),
             
-            
-            'notifications' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/notifications',
-                    'defaults' => array(
-                        'controller' => 'Management\Controller\Index',
-                        'action' => 'notifications',
-                    ),
-                ),
-            ),
-            
-            
             'sign-up' => array(
                 'type' => 'Segment',
                 'options' => array(
@@ -78,27 +65,6 @@ return array(
                 ),
             ),
             
-            'prueba' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/application/index/prueba',
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
-                        'action' => 'prueba',
-                    ),
-                ),
-            ),
-            
-            'lista' => array(
-                'type' => 'Segment',
-                'options' => array(
-                    'route' => '/application/index/lista',
-                    'defaults' => array(
-                        'controller' => 'Application\Controller\Index',
-                        'action' => 'lista',
-                    ),
-                ),
-            ),
 
             // The following is a route to simplify getting started creating
             // new controllers and actions without needing to create a new
@@ -108,6 +74,10 @@ return array(
                 'type'    => 'Literal',
                 'options' => array(
                     'route'    => '/application',
+                    'constraints' => array(
+                        'state' => '[a-zA-Z0-9-/#_]+',
+                        'code' => '[a-zA-Z0-9-/#_]+',
+                    ),
                     'defaults' => array(
                         '__NAMESPACE__' => 'Application\Controller',
                         'controller'    => 'Index',
@@ -165,7 +135,7 @@ return array(
         'template_map' => array(
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             'application/index/index' => __DIR__ . '/../view/application/index/index.phtml',
-            //'error/404'               => __DIR__ . '/../view/error/404.phtml',
+            'error/404'               => __DIR__ . '/../view/error/404.phtml',
             'error/index'             => __DIR__ . '/../view/error/index.phtml',
             'partial/pagination'      => __DIR__ . '/../view/partial/pagination.phtml',
         ),

@@ -13,7 +13,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
 use User\Form\Add;
-use Application\Form\BroadcastForm;
 
 use Google_Client;
 use Google_Service_YouTube_LiveBroadcastSnippet;
@@ -41,25 +40,8 @@ class IndexController extends AbstractActionController
     
     public function pruebaAction()
     {
-        
-       
-        
-        $form = new BroadcastForm();
         session_start();
-        
-        if ($this->request->isPost()) {
-           
-            $form->setData($this->request->getPost());
-            $data = $this->request->getPost();
-            var_dump($data['start_date']);
-            var_dump($data['title']);
-                
-                $startDate=$data['start_date'];
-                $title=$data['title'];
-       var_dump( $startDate);
-            var_dump($title);
 
-        
         // Call set_include_path() as needed to point to your client library.
 
 
@@ -108,9 +90,8 @@ class IndexController extends AbstractActionController
             // Create an object for the liveBroadcast resource's snippet. Specify values
             // for the snippet's title, scheduled start time, and scheduled end time.
             $broadcastSnippet = new Google_Service_YouTube_LiveBroadcastSnippet();
-            $broadcastSnippet->setTitle($title);
-            var_dump($startDate);
-            $broadcastSnippet->setScheduledStartTime($startDate);
+            $broadcastSnippet->setTitle('Nuevo broadcast');
+            $broadcastSnippet->setScheduledStartTime('2016-11-01T00:00:00.000Z');
             //$broadcastSnippet->setScheduledEndTime('2034-01-31T00:00:00.000Z');
 
             // Create an object for the liveBroadcast resource's status, and set the
@@ -159,7 +140,7 @@ class IndexController extends AbstractActionController
                 ));
 
             $htmlBody .= "<h3>Añadir broadcast</h3><ul>";
-            $htmlBody .= sprintf('<li>%s publicado el %s (https://www.youtube.com/watch?v=%s)</li>',
+            $htmlBody .= sprintf('<li>%s publicado el %s (%s)</li>',
                 $broadcastsResponse['snippet']['title'],  //Título del video
                 $broadcastsResponse['snippet']['publishedAt'],  //fecha de publicación del video
                 $broadcastsResponse['id']);   // ID del video en youtube
@@ -199,8 +180,6 @@ class IndexController extends AbstractActionController
 END;
 }
 
-            }
-        
         return new ViewModel(array(
             'htmlBody'=>$htmlBody,
         ));
@@ -210,14 +189,6 @@ END;
     
     public function listaAction()
     {
-        $this->layout('layout/user');
-        if (!$user = $this->identity()) {
-            $this->flashMessenger()->addErrorMessage('Debes iniciar sesión para agregar un post');
-            return $this->redirect()->toRoute('blog');
-        }
-        
-        $form = new BroadcastForm($dbAdapter);
-        
         session_start();
 
         // Call set_include_path() as needed to point to your client library.
@@ -342,12 +313,6 @@ END;
     
     public function addBroadcastAction()
     {
-        $this->layout('layout/user');
-        if (!$user = $this->identity()) {
-            $this->flashMessenger()->addErrorMessage('Debes iniciar sesión para agregar un post');
-            return $this->redirect()->toRoute('blog');
-        }
-        $form = new BroadcastForm();
-        return new ViewModel(array('form'=>$form));
+        return new ViewModel();
     }
 }

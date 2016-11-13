@@ -7,6 +7,11 @@
 /** @var $form \Blog\Form\Add */
 $form = $this->form;
 $form->prepare();
+
+ //ERROR, en action debo hacer referencia al index y señalar action porque si me voy directo a 
+//URL de edit-post me pedirá los parámetros de URL
+$form->setAttribute('action', $this->url('blog',array('action' => 'edit')));
+                            
 echo $this->form()->openTag($form);
 
 ?>

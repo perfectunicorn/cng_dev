@@ -21,6 +21,8 @@ interface BlogService
     public function find($categorySlug, $postSlug,$posted);
 
     public function findById($postId);
+    
+    public function findByUser($userId);
 
     public function update(Post $post,$slug);
 

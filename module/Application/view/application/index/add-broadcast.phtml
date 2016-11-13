@@ -1,0 +1,36 @@
+<h1>Agregar streaming</h1>
+
+<?php
+
+/** @var $form \User\Form\Add */
+$form = $this->form;
+$form->setAttribute('action', $this->url('prueba'));
+$form->prepare();
+echo $this->form()->openTag($form);
+
+?>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('title')); ?>
+</div>
+
+<div class="form-group">
+    <?php echo $this->formRow($form->get('start_date')); ?>
+</div>
+
+
+<?php echo $this->formSubmit($form->get('submit')); ?>
+<?php echo $this->form()->closeTag(); ?>
+
+<script>
+    $(document).ready(function() {
+    $('select').material_select();
+  });
+</script>
+
+<script>
+$('#timezone_example_1').datetimepicker();
+  </script>
+
+
+

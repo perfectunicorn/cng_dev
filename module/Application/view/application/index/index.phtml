@@ -1,61 +1,163 @@
 <?php echo $this->doctype(); ?>
-<html lang="en">
+                <?php if (defined('RUNNING_FROM_ROOT')) {
+$this->plugin('basePath')->setBasePath($this->basePath().'/public');
+} ?>
+<!doctype html>
+<html lang="es">
     <head>
         <meta charset="utf-8">
+        
         <?php echo $this->headTitle('Code needs girls')->setSeparator(' - ')->setAutoEscape(false) ?>
 
         <?php echo $this->headMeta()
             ->appendName('viewport', 'width=device-width, initial-scale=1.0')
             ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>   
+        
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/logo.png'))
+                ->prependStylesheet(array('href'=>'https://fonts.googleapis.com/icon?family=Material+Icons', 'rel'=>'stylesheet') )
+
         ?>
+                
+        
+        <!-- Favicons-->
+        <link rel="icon" href="<?php echo $this->basePath('/img/favicon/logo.png');?>" sizes="32x32">
 
-        <!-- Le styles -->
-        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'href' => $this->basePath() . 'public/img/logo.png'))
-                        ->prependStylesheet($this->basePath('public/css/style.css'))
-                        ->prependStylesheet($this->basePath('public/css/index.css'))
-                        ->prependStylesheet($this->basePath('public/css/materialize.css'))
-                        ->prependStylesheet($this->basePath('public/css/bootstrap-theme.min.css'))
-                        ->prependStylesheet($this->basePath('public/css/bootstrap.min.css')) ?>
+        <!-- CORE CSS-->    
+        <link href="<?php echo $this->basePath('/css/materialize.css');?>" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="<?php echo $this->basePath('/css/style.css');?>" type="text/css" rel="stylesheet" media="screen,projection">
+        <link href="<?php echo $this->basePath('/css/materialdesignicons.min.css');?>" media="all" rel="stylesheet" type="text/css" />
+        <link href="<?php echo $this->basePath('/css/index.css');?>" media="all" rel="stylesheet" type="text/css" />
 
-        <!-- Scripts -->
-        <?php echo $this->headScript()
-            ->prependFile($this->basePath('public/js/materialize.min.js'))
-            ->prependFile($this->basePath('public/js/bootstrap.min.js'))    
-            ->prependFile($this->basePath('public/js/jquery.min.js'))
-            ->prependFile($this->basePath('public/js/respond.min.js'), 'text/javascript', array('conditional' => 'lt IE 9',))
-            ->prependFile($this->basePath('public/js/html5shiv.min.js'),   'text/javascript', array('conditional' => 'lt IE 9',))
-        ; ?>
+        <!-- INCLUDED PLUGIN CSS ON THIS PAGE -->    
+        <link href="<?php echo $this->basePath('/js/plugins/perfect-scrollbar/perfect-scrollbar.css');?>" type="text/css" rel="stylesheet" media="screen,projection">
 
     </head>
-    <body>
-        <div class="parallax-container">
-            <div class="parallax"><img src="<?php echo $this->basePath('public/img/img2.jpg'); ?>" ></div>
+
+<body class="teal" >
+    <div class="row white">
+        <div class=" card-panel z-depth-0">
+            <div class="col s12 m12 l5">
+               <div class="valign-wrapper">
+                   <div class="row margin">
+                   <img class="responsive-img avatar" src="<?php echo $this->basePath('/img/logo_cng.png');?>">
+                   </div>
+          <div class="row">
+          <div class="col s12 m12 l12 hide-on-med-and-down">
+          <p class="grey-text text-darken-3 lighten-3 ">
+                    <h6>
+                        <span>
+                            
+                        </span>
+                    </h6>
+                    </p> 
+          </div>
+          </div>
+                </div> 
+            </div>
+            <div class="col s12 m12 l7 margin">
+               <div class="z-depth-0">
+                <?php
+                    $form = $this->form;
+                    $form->setAttribute('action', $this->url('sign-up',array('action' => 'add')));
+                    $form->prepare();
+                    echo $this->form()->openTag($form);
+                ?>
+
+                   <div class="row">
+                      <div class="col s12 center">
+                        <h4>Registro</h4>
+                        <p class="center">Únete a nuestra red</p>
+                      </div>
+                    </div>
+                   
+                   <div class="row">
+                        <div class="col s12 m12">
+                            <?php echo $this->formRow($form->get('firstName')); ?>
+                        </div>
+                       
+                   </div>
+                    <div class="row">
+                   <div class="col s12 m12">
+                            <?php echo $this->formRow($form->get('lastName')); ?>
+                        </div>
+                     </div>
+                    <div class="row">
+                        <div class="col s12 m12">
+                            <?php echo $this->formRow($form->get('gender')); ?>
+                        </div>
+                      
+                   </div>
+                   <div class="row">
+                        <div class="col s12 m12">
+                            <?php echo $this->formRow($form->get('nickname')); ?>
+                        </div>
+                   </div>
+ 
+                   <div class="row">
+                        <div class="col s12">
+                             <?php echo $this->formRow($form->get('email')); ?>
+                        </div>
+                   </div>
+                   <div class="row">
+                        <div class="col s12">
+                             <?php echo $this->formRow($form->get('password')); ?>
+                        </div>
+                   </div>
+                   
+                    <div class="row">
+                        <div class="col s12">
+                             <?php echo $this->formRow($form->get('repeatPassword')); ?>
+                        </div>
+                   </div>
+                   
+                   <div class="row">
+                        <div class="col s12 center">
+                           <button class="btn waves-effect waves-light" type="submit" name="submit">
+                               Registrarse
+                                
+                          </button>
+                               
+                        </div>
+                   </div>
+                   
+                   <div class="row">
+                        <div class="col s12">
+                             <p class="margin center medium-small sign-up">
+                                 ¿Ya estás registrado? 
+                                 <a href="<?php echo $this->url('sign-in');?>">Iniciar sesión</a>
+                             </p>
+          
+                        </div>
+                   </div>
+
+           <?php echo $this->form()->closeTag(); ?>
+    
         </div>
-        <div class="section white">
-            <div class="row container">
-                <center><h2 class="header">Code needs girls</h2>
-                  <p class="grey-text text-darken-3 lighten-3">
-                    Code needs girls es una red de aprendizaje donde mujeres 
-                    pueden compartir información y recursos sobre STEM 
-                    (Ciencia, Tecnología, Ingeniería y Matemáticas) en español. 
-                    Code needs girls les ayudará a aprender y desarrollar habilidades 
-                    como programación, desarrollo de aplicaciones web y móviles, videojuegos y robótica. 
-                    El objetivo es inspirar a las mujeres a seguir carreras a través del estudio de las Ciencias de la Computación  
-                  </p>
-                    <a href="<?php echo $this->url('sign-in')?>" class="waves-effect waves-light btn-large">Iniciar sesión</a>
-                    <a  href="<?php echo $this->url('sign-up')?>" class="waves-effect waves-light btn-large">Abrir una cuenta</a>
-                </center>
+                </div> 
             </div>
         </div>
-
-        <div class="parallax-container">
-            
-            <div class="parallax"><img src="<?php echo $this->basePath('public/img/img2.jpg'); ?>"></div>
-        </div>
-        <script>
-            $(document).ready(function(){
-              $('.parallax').parallax();
-            });
-        </script>
-    </body>
+ 
     
+    
+    
+    <!-- ================================================
+    Scripts
+    ================================================ -->
+    
+    <!-- jQuery Library -->
+    <script type="text/javascript" src="<?php echo $this->basePath('/js/jquery-1.11.2.min.js');?>"></script>    
+    <!--materialize js-->
+    <script type="text/javascript" src="<?php echo $this->basePath('/js/materialize.min.js');?>"></script>
+    <!--scrollbar-->
+    <script type="text/javascript" src="<?php echo $this->basePath('/js/plugins/perfect-scrollbar/perfect-scrollbar.min.js');?>"></script>
+
+    <!--plugins.js - Some Specific JS codes for Plugin Settings-->
+    <script type="text/javascript" src="<?php echo $this->basePath('/js/plugins.js');?>"></script>
+    
+    <script>
+            $(document).ready(function() {
+            $('select').material_select();
+          });
+    </script>
+</body>

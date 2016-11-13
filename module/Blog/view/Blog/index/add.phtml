@@ -3,40 +3,6 @@
 <?php $this->headLink()->appendStylesheet('/css/materialize.css'); ?>
 <?php $this->headLink()->appendStylesheet('/css/index.css'); ?>
 
-       
-<!-- Include jQuery. -->
-  <script type="text/javascript" src="https//cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
-<!-- Include JS files. -->
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/froala_editor.min.js');?>"></script>
-
-  <!-- Include Code Mirror. -->
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/codemirror.min.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.3.0/mode/xml/xml.min.js"></script>
- 
-  <!-- Include Plugins. -->
-<script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/video.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/align.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/char_counter.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/code_beautifier.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/code_view.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/colors.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/emoticons.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/entities.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/font_family.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/font_size.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/fullscreen.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/image.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/image_manager.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/line_breaker.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/link.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/lists.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/quote.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/table.min.js');?>"></script>
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/plugins/url.min.js');?>"></script>
-
-  <script type="text/javascript" src="<?php echo $this->basePath('public/froala_editor/js/languages/es.js');?>"></script>
-
 
 <h1>Add Blog Post</h1>
 
@@ -61,8 +27,8 @@ echo $this->form()->openTag($form);
     <?php echo $this->formRow($form->get('category_id')); ?>
 </div>
 
-<div class="form-group">
-    <?php echo $this->formRow($form->get('tags')); ?>
+<div class="form-control">
+    <div class="chips"><?php echo $this->formRow($form->get('tags')); ?></div>
     <p class="help-block">Separar tags con comas (,)</p>
 </div>
 
@@ -75,12 +41,12 @@ echo $this->form()->openTag($form);
   });
 </script>
 
-  <script>
-      $(function() {
-          $('#edit').froalaEditor(
-                  {
-      // Set the language code.
-      language: 'es'
-    })
-      });
+ <script>
+    $(document).ready(function() {
+        $('#summernote').summernote();
+    });
+    
+    $('.chips').material_chip();
   </script>
+  
+  
