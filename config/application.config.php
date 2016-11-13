@@ -14,9 +14,10 @@ return array(
         'Welcome',
         'Courses',
         'Management',
-        'DoctrineModule',
-        'DoctrineORMModule',
-        'DoctrineMongoODMModule',
+       
+        //'DoctrineModule',
+        //'DoctrineORMModule',
+        //'DoctrineMongoODMModule',
         
     ),
 
